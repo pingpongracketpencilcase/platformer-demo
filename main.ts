@@ -138,26 +138,6 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.hazardLava0, function (sp
     mySprite.destroy()
     game.over(false)
 })
-sprites.onCreated(SpriteKind.lava, function (sprite) {
-    Lava.setImage(img`
-        2 2 2 2 2 2 2 4 2 2 2 5 2 2 2 2 
-        2 2 2 2 2 2 2 2 4 2 2 2 4 2 2 2 
-        5 2 2 4 2 2 2 2 2 2 2 2 2 4 2 2 
-        2 2 2 2 2 4 2 2 4 2 2 2 2 4 2 2 
-        2 2 2 2 4 4 2 2 2 2 2 2 2 2 2 2 
-        2 4 2 2 2 2 2 2 2 4 2 2 2 2 2 5 
-        4 2 2 2 2 2 2 4 2 2 4 2 2 2 2 2 
-        2 4 5 2 2 2 5 2 2 5 2 2 2 2 4 4 
-        2 2 2 2 2 2 4 2 2 2 2 2 2 2 2 2 
-        2 2 2 2 2 2 2 2 2 2 2 2 2 4 2 2 
-        2 2 2 4 4 4 2 2 2 4 2 2 5 2 2 4 
-        2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 
-        2 2 5 2 2 2 2 2 2 2 2 2 2 2 2 2 
-        2 2 2 2 2 2 2 5 5 2 2 2 4 2 2 2 
-        2 4 2 4 2 2 2 4 2 2 2 2 2 4 2 2 
-        4 2 2 2 5 2 2 2 4 2 2 5 4 2 2 2 
-        `)
-})
 function levelOne () {
     scene.setBackgroundImage(img`
         9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
@@ -282,7 +262,6 @@ function levelOne () {
         3333333333333333333333333333337777777777777777777777777777788888888888888888888888888888888888888888888888888888999999999999999999999999999999999999999999999999
         `)
     tiles.setTilemap(tilemap`level1`)
-    jumpcount = 0
     mySprite.setPosition(24, 99)
     EnemyDuck = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -304,9 +283,12 @@ function levelOne () {
         `, SpriteKind.Enemy)
     EnemyDuck.follow(mySprite, 50)
 }
-scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sprite, location) {
-    EnemyDuck.destroy()
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.collectibleBlueCrystal, function (sprite, location) {
     levelThree()
+})
+scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sprite, location) {
+    mySprite.destroy()
+    game.over(true, effects.confetti)
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.collectibleRedCrystal, function (sprite, location) {
     EnemyDuck.destroy()
@@ -339,8 +321,8 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     mySprite.destroy()
     game.over(false)
 })
-let EnemyDuck: Sprite = null
 let Lava: Sprite = null
+let EnemyDuck: Sprite = null
 let jumpcount = 0
 let mySprite: Sprite = null
 game.splash("Hero Car")
@@ -373,6 +355,7 @@ mySprite = sprites.create(img`
     ........................
     ........................
     `, SpriteKind.Player)
+jumpcount = 0
 levelOne()
 forever(function () {
     controller.moveSprite(mySprite, 100, 0)
