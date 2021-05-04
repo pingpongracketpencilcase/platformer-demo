@@ -125,10 +125,12 @@ function levelThree () {
         eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
         `)
     tiles.setTilemap(tilemap`level3`)
-    jumpcount = 0
     mySprite.setPosition(24, 99)
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
+        jumpcount = 0
+    }
     if (jumpcount < 2) {
         mySprite.vy = -100
         jumpcount += 1
@@ -262,7 +264,6 @@ function levelOne () {
         3333333333333333333333333333337777777777777777777777777777788888888888888888888888888888888888888888888888888888999999999999999999999999999999999999999999999999
         `)
     tiles.setTilemap(tilemap`level1`)
-    mySprite.setPosition(24, 99)
     EnemyDuck = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -291,43 +292,23 @@ scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.chestClosed, function (sp
     game.over(true, effects.confetti)
 })
 scene.onOverlapTile(SpriteKind.Player, sprites.dungeon.collectibleRedCrystal, function (sprite, location) {
-    EnemyDuck.destroy()
     levelTwo()
+    EnemyDuck.destroy()
 })
 function levelTwo () {
     tiles.setTilemap(tilemap`level4`)
-    jumpcount = 0
     mySprite.setPosition(31, 67)
-    Lava = sprites.create(img`
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
-        `, SpriteKind.Player)
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     mySprite.destroy()
     game.over(false)
 })
-let Lava: Sprite = null
 let EnemyDuck: Sprite = null
 let jumpcount = 0
 let mySprite: Sprite = null
-game.splash("Hero Car")
+game.splash("Hero")
 game.splash("Reach the treasure blocks ", "to save the city!")
-game.splash("Jump up to 2 times ")
+game.splash("Jump up more than once")
 game.splash("Be careful of the ducks ")
 mySprite = sprites.create(img`
     ........................
@@ -355,13 +336,10 @@ mySprite = sprites.create(img`
     ........................
     ........................
     `, SpriteKind.Player)
-jumpcount = 0
+mySprite.setPosition(24, 99)
+mySprite.ay = 200
 levelOne()
 forever(function () {
     controller.moveSprite(mySprite, 100, 0)
     scene.cameraFollowSprite(mySprite)
-    mySprite.ay = 200
-    if (mySprite.isHittingTile(CollisionDirection.Bottom)) {
-        jumpcount = 0
-    }
 })
